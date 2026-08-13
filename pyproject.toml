@@ -6,11 +6,6 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Francisco Escobar" }]
-
-[project.urls]
-Homepage = "https://github.com/FranciszekaMateu/eva-mcp"
-Repository = "https://github.com/FranciszekaMateu/eva-mcp"
-
 keywords = ["moodle", "mcp", "fing", "udelar", "eva", "cli", "ai-agents", "shibboleth"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -31,11 +26,15 @@ dependencies = [
     "python-dotenv>=1.0",
     "beautifulsoup4>=4.12",
     "rich>=13.7",
-    # Servidor MCP (eva-mcp): van en base para que `uvx eva-cli` instale todo de una
+    # Servidor MCP (eva-mcp): van en base para que la instalación traiga todo de una
     "fastmcp>=3.0",
     "mcp>=1.6",
     "pywin32>=306; platform_system == 'Windows'",
 ]
+
+[project.urls]
+Homepage = "https://github.com/FranciszekaMateu/eva-mcp"
+Repository = "https://github.com/FranciszekaMateu/eva-mcp"
 
 [project.scripts]
 eva = "eva_cli.cli:app"
