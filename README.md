@@ -154,7 +154,7 @@ Crear `~/.eva-cli/.env` con tus credenciales de **bedelía/SeCIU** (usuario = CI
 con dígito verificador):
 
 ```
-EVA_USER=53087475
+EVA_USER=TU_CEDULA
 EVA_PASS=tu_contraseña
 ```
 
