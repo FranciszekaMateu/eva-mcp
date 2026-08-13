@@ -6,6 +6,11 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Francisco Escobar" }]
+
+[project.urls]
+Homepage = "https://github.com/FranciszekaMateu/eva-mcp"
+Repository = "https://github.com/FranciszekaMateu/eva-mcp"
+
 keywords = ["moodle", "mcp", "fing", "udelar", "eva", "cli", "ai-agents", "shibboleth"]
 classifiers = [
     "Development Status :: 3 - Alpha",
