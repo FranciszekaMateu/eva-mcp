@@ -26,6 +26,9 @@ dependencies = [
     "python-dotenv>=1.0",
     "beautifulsoup4>=4.12",
     "rich>=13.7",
+    # Seguridad: credenciales en el llavero del SO y cookie de sesión cifrada
+    "keyring>=25",
+    "cryptography>=42",
     # Servidor MCP (eva-mcp): van en base para que la instalación traiga todo de una
     "fastmcp>=3.0",
     "mcp>=1.6",

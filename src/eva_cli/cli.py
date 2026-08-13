@@ -18,10 +18,11 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from eva_cli import credentials
 from eva_cli.auth import EvaAuthError
 from eva_cli.client import EvaClient
 from eva_cli.paths import normalize_path
-from eva_cli.session import SESSION_FILE, get_client
+from eva_cli.session import clear_session, get_client
 
 app = typer.Typer(help="CLI del EVA FING — acceso headless para humanos y agentes.")
 console = Console()
@@ -39,15 +40,55 @@ def _get_client(*, reutilizar: bool = True) -> EvaClient:
 
 
 @app.command()
-def login() -> None:
-    """Verifica las credenciales y guarda la sesión para reutilizarla."""
+def login(
+    user: str | None = typer.Option(
+        None, "--user", "-u", help="CI de bedelía (sin puntos ni guiones)"
+    ),
+) -> None:
+    """Verifica credenciales y las guarda en el llavero del sistema (keyring).
+
+    La contraseña se pide de forma interactiva (sin mostrarla) y se guarda
+    cifrada por el sistema operativo — no en texto plano.
+    """
+    import getpass
+
+    # ¿Ya hay credenciales y sesión válidas?
     try:
-        client = _get_client(reutilizar=False)
-    except typer.Exit as e:
-        err.print(str(e))
+        existing = get_client()
+    except (RuntimeError, EvaAuthError):
+        existing = None
+    if existing is not None:
+        existing.close()
+        if user is None:
+            console.print(
+                "[green]✓[/] Ya hay credenciales y sesión válidas. "
+                "Para reloguear: eva login -u <CI>"
+            )
+            return
+
+    if user is None:
+        user = typer.prompt("CI de bedelía (sin puntos ni guiones)")
+    password = getpass.getpass("Contraseña de bedelía: ")
+
+    credentials.store_credentials(user, password)
+    try:
+        client = get_client(reutilizar=False)
+    except EvaAuthError as e:
+        err.print(f"[red]✗[/] {e}")
         raise typer.Exit(code=1) from e
-    console.print(f"[green]✓[/] Login correcto. Cookies guardadas en {SESSION_FILE}")
+    console.print(
+        "[green]✓[/] Login correcto. Credenciales guardadas en el llavero del "
+        "sistema (Windows Credential Manager / Keychain), no en texto plano."
+    )
     client.close()
+
+
+@app.command()
+def logout() -> None:
+    """Borra credenciales del llavero y la sesión guardada."""
+    credentials.clear_credentials()
+    clear_session()
+    console.print("[green]✓[/] Credenciales y sesión borradas.")
 
 
 @app.command()

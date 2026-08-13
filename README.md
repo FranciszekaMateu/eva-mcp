@@ -150,17 +150,20 @@ uv pip install --python .venv/Scripts/python -e ".[dev]"
 
 ## Configuración (credenciales)
 
-Crear `~/.eva-cli/.env` con tus credenciales de **bedelía/SeCIU** (usuario = CI
-con dígito verificador):
+La forma recomendada es usar el **llavero del sistema** (Windows Credential
+Manager, macOS Keychain, Linux Secret Service). La contraseña queda **cifrada por
+el sistema operativo**, nunca en texto plano:
 
-```
-EVA_USER=TU_CEDULA
-EVA_PASS=tu_contraseña
+```bash
+eva login
 ```
 
-El servidor las lee de ahí, sin importar desde dónde lo lance tu agente.
-La sesión se cachea en `~/.eva-cli/cookies.txt` y se renueva automáticamente al
-expirar.
+Te pide el CI y la contraseña una sola vez (sin mostrarla) y las guarda cifradas.
+La sesión también se cachea **cifrada** en `~/.eva-cli/cookies.enc` y se renueva
+sola al expirar. Para borrar todo: `eva logout`.
+
+Alternativa (fallback, texto plano): variables de entorno `EVA_USER`/`EVA_PASS`
+o un archivo `.env`. El orden de resolución es: **entorno → llavero → `.env`**.
 
 ---
 
@@ -185,7 +188,8 @@ expirar.
 ## Comandos CLI
 
 ```bash
-eva login            # verifica credenciales y guarda la sesión
+eva login            # guarda credenciales en el llavero del sistema (seguro)
+eva logout           # borra credenciales y sesión
 eva cursos           # lista tus cursos (id, nombre)
 eva avisos metnum    # últimos avisos de un curso (nombre o id)
 eva aviso 11740      # texto completo de un aviso
