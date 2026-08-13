@@ -1,16 +1,15 @@
-# eva-cli
+# eva-mcp
 
-CLI y **servidor MCP** para el **EVA FING** (Moodle de la Facultad de Ingeniería,
-UdelaR) con acceso headless: pensado para humanos desde la terminal y para
-**agentes de IA** (Hermes, cron jobs, scripts).
+Servidor **MCP** y **CLI** para el **EVA FING** (Moodle de la Facultad de
+Ingeniería, UdelaR) con acceso headless: pensado para **agentes de IA** (Claude
+Desktop, Cursor, Hermes, etc.) y para humanos desde la terminal.
 
 Autentica contra el SSO de UdelaR (Shibboleth) programáticamente y opera la sesión
 con cookies — sin navegador, sin tokens de admin.
 
-## Instalación
+## Instalación (desarrollo)
 
 ```bash
-cd eva-cli
 uv venv .venv
 uv pip install --python .venv/Scripts/python -e ".[dev]"
 ```
@@ -77,7 +76,7 @@ Requisito: Python 3.11+ y [`uv`](https://docs.astral.sh/uv/) (o `pipx`) instalad
   "mcpServers": {
     "eva": {
       "command": "uvx",
-      "args": ["--from", "eva-cli", "eva-mcp"]
+      "args": ["eva-mcp"]
     }
   }
 }
@@ -90,7 +89,7 @@ Requisito: Python 3.11+ y [`uv`](https://docs.astral.sh/uv/) (o `pipx`) instalad
   "mcpServers": {
     "eva": {
       "command": "uvx",
-      "args": ["--from", "eva-cli", "eva-mcp"]
+      "args": ["eva-mcp"]
     }
   }
 }
@@ -99,14 +98,14 @@ Requisito: Python 3.11+ y [`uv`](https://docs.astral.sh/uv/) (o `pipx`) instalad
 **Hermes**:
 
 ```bash
-hermes mcp add eva --command uvx --args --from eva-cli eva-mcp
+hermes mcp add eva --command uvx --args eva-mcp
 ```
 
 ### 3. Verificar sin agente
 
 ```bash
-uvx --from eva-cli eva cursos        # CLI directo
-uvx --from eva-cli eva-mcp           # servidor MCP (stdio)
+uvx eva-mcp                         # servidor MCP (stdio)
+uvx --from eva-mcp eva cursos       # CLI directo
 ```
 
 > Las tools `mcp__eva__*` aparecen en Hermes recién en una sesión nueva (no hay

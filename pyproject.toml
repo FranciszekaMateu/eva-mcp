@@ -1,7 +1,7 @@
 [project]
-name = "eva-cli"
+name = "eva-mcp"
 version = "0.1.0"
-description = "CLI y servidor MCP para el EVA FING (Moodle de la Facultad de Ingeniería, UdelaR) — acceso headless para humanos y agentes de IA"
+description = "Servidor MCP y CLI para el EVA FING (Moodle de la Facultad de Ingeniería, UdelaR) — acceso headless para humanos y agentes de IA"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
