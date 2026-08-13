@@ -12,7 +12,7 @@ con cookies — sin navegador, sin tokens de admin.
 ```bash
 cd eva-cli
 uv venv .venv
-uv pip install --python .venv/Scripts/python -e ".[dev,mcp]"
+uv pip install --python .venv/Scripts/python -e ".[dev]"
 ```
 
 > ⚠️ El venv se crea con `uv` (sin `pip` propio). Instalá con `uv pip install
@@ -49,22 +49,68 @@ La sesión se guarda en `~/.eva-cli/cookies.txt` y se reutiliza hasta que expira
 `-d` acepta rutas Windows nativas, `~/...` y rutas MSYS (`/c/Users/...`, `/tmp/...`),
 que se normalizan automáticamente.
 
-## Uso (servidor MCP)
+## Uso con agentes (MCP)
 
-```bash
-eva-mcp    # sirve tools mcp__eva__* por stdio
+El servidor MCP expone estas tools: `eva_cursos`, `eva_avisos`, `eva_aviso`,
+`eva_actividades`, `eva_calendario`, `eva_material`, `eva_descargar_material`,
+`eva_login`.
+
+### 1. Credenciales
+
+Crear `~/.eva-cli/.env` (o exportar `EVA_USER`/`EVA_PASS`):
+
+```
+EVA_USER=53087475
+EVA_PASS=tu_contraseña
 ```
 
-Tools expuestas: `eva_cursos`, `eva_avisos`, `eva_aviso`, `eva_actividades`,
-`eva_calendario`, `eva_material`, `eva_descargar_material`, `eva_login`.
+El servidor las lee de ahí, sin importar desde dónde lo lance tu agente.
 
-### Registrar en Hermes
+### 2. Agregar el server a tu agente
 
-```bash
-hermes mcp add eva --command C:\Users\Francisco\Documents\eva-cli\.venv\Scripts\eva-mcp.exe
+Requisito: Python 3.11+ y [`uv`](https://docs.astral.sh/uv/) (o `pipx`) instalados.
+
+**Claude Desktop** — `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "eva": {
+      "command": "uvx",
+      "args": ["--from", "eva-cli", "eva-mcp"]
+    }
+  }
+}
 ```
 
-Las tools aparecen como `mcp__eva__*` en una sesión nueva.
+**Cursor** — `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "eva": {
+      "command": "uvx",
+      "args": ["--from", "eva-cli", "eva-mcp"]
+    }
+  }
+}
+```
+
+**Hermes**:
+
+```bash
+hermes mcp add eva --command uvx --args --from eva-cli eva-mcp
+```
+
+### 3. Verificar sin agente
+
+```bash
+uvx --from eva-cli eva cursos        # CLI directo
+uvx --from eva-cli eva-mcp           # servidor MCP (stdio)
+```
+
+> Las tools `mcp__eva__*` aparecen en Hermes recién en una sesión nueva (no hay
+> hot-reload de MCP).
 
 ## Arquitectura
 
